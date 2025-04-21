@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f4f4f4;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    #task-form {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+    }
+
+    button {
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      background: #fff;
+      margin: 10px auto;
+      padding: 10px;
+      border-radius: 5px;
+      width: 400px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .actions button {
+      margin-left: 5px;
+    }
+
+    .edit-mode input {
+      flex: 1;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Task Manager</h2>
+
+  <div id="task-form">
+    <input type="text" id="new-task" placeholder="Enter new task" />
+    <button onclick="addTask()">Add</button>
+  </div>
+
+  <ul id="task-list"></ul>
+
+  <script>
+    const taskList = document.getElementById("task-list");
+
+    function addTask() {
+      const taskInput = document.getElementById("new-task");
+      const taskText = taskInput.value.trim();
+
+      if (taskText === "") return;
+
+      const li = document.createElement("li");
+
+      const span = document.createElement("span");
+      span.textContent = taskText;
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Edit";
+      editBtn.onclick = () => editTask(li, span);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.onclick = () => taskList.removeChild(li);
+
+      actions.appendChild(editBtn);
+      actions.appendChild(deleteBtn);
+
+      li.appendChild(span);
+      li.appendChild(actions);
+
+      taskList.appendChild(li);
+      taskInput.value = "";
+    }
+
+    function editTask(li, span) {
+      const currentText = span.textContent;
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = currentText;
+
+      const saveBtn = document.createElement("button");
+      saveBtn.textContent = "Save";
+
+      saveBtn.onclick = () => {
+        span.textContent = input.value;
+        li.innerHTML = "";
+        li.appendChild(span);
+        li.appendChild(createActions(li, span));
+      };
+
+      li.innerHTML = "";
+      li.classList.add("edit-mode");
+      li.appendChild(input);
+      li.appendChild(saveBtn);
+    }
+
+    function createActions(li, span) {
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Edit";
+      editBtn.onclick = () => editTask(li, span);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.onclick = () => taskList.removeChild(li);
+
+      actions.appendChild(editBtn);
+      actions.appendChild(deleteBtn);
+      return actions;
+    }
+  </script>
+</body>
+</html>
